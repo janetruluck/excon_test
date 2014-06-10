@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "activerecord"                        , "~> 4"
+  spec.add_runtime_dependency "activesupport"                       , "~> 4"
   spec.add_runtime_dependency "activerecord-jdbcpostgresql-adapter" , "~> 1.3.0"
   spec.add_runtime_dependency "carrierwave"                         , "~> 0.10.0"
   spec.add_runtime_dependency "mini_magick"                         , "~> 3.7.0"

@@ -7,39 +7,44 @@ rescue Bundler::BundlerError => e
 end
 
 task :rails_env do
+  ExconTest::Application.environment
 end
 
 task :environment do
-  ENV["RACK_ENV"] ||= 'development'
+  ExconTest::Application.environment
 end
 
 module Rails
-  def self.application
-    Struct.new(:config, :paths) do
-      def load_seed
-        require 'excon_test'
-        require File.expand_path('../db/seeds', __FILE__)
-      end
-    end.new(config, paths)
-  end
+  class << self
+    def application
+      Struct.new(:config, :paths) do
+        def load_seed
+          require File.expand_path('../db/seeds', __FILE__)
+        end
+      end.new(config, paths)
+    end
 
-  def self.config
-    db_config = YAML.load(File.read("config/database.yml"))
-    Struct.new(:database_configuration).new(db_config)
-  end
+    def config
+      Struct.new(:database_configuration).new(
+        ExconTest::Application.database_config_for_environment
+      )
+    end
 
-  def self.paths
-    { 'db/migrate' => ["#{root}/db/migrate"] }
-  end
+    def paths
+      { 'db/migrate' => ["#{root}/db/migrate"] }
+    end
 
-  def self.env
-    env = ENV['RACK_ENV'] || "development"
-    ActiveSupport::StringInquirer.new(env)
-  end
+    def env
+      ActiveSupport::StringInquirer.new(ExconTest::Application.environment)
+    end
 
-  def self.root
-    File.dirname(__FILE__) + "/../.."
+    def root
+      ExconTest::Application.root
+    end
   end
 end
 
 Rake.load_rakefile "active_record/railties/databases.rake"
+include ActiveRecord::Tasks
+DatabaseTasks.database_configuration = ExconTest::Application.database_config
+DatabaseTasks.db_dir = "#{Dir.pwd}/db"

@@ -1,4 +1,5 @@
 require "bundler/gem_tasks"
+require 'active_support'
 require 'active_support/core_ext/string/strip.rb'
 require 'rake'
 require 'excon_test'
