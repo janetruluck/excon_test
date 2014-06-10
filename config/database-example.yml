@@ -1,0 +1,17 @@
+#This is an example file for a database.yml you can modify to run tests locally
+development:
+  adapter: jdbcpostgresql
+  encoding: utf-8
+  database: excon_test
+  pool: 5
+  username: jason
+  password:
+  host: localhost
+test:
+  adapter: jdbcpostgresql
+  encoding: utf-8
+  database: excon_test
+  pool: 5
+  username: jason
+  password:
+  host: localhost
